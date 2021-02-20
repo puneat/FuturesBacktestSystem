@@ -1,3 +1,19 @@
+from pyalgotrade.barfeed.csvfeed import GenericBarFeed
+from pyalgotrade.bar import Frequency
+from pyalgotrade import strategy
+from pyalgotrade.technical import ma
+from pyalgotrade.technical import rsi
+from pyalgotrade.technical import cross
+from pyalgotrade.technical.bollinger import BollingerBands
+from pyalgotrade.technical.macd import MACD
+from pyalgotrade.technical.stoch import StochasticOscillator
+from pyalgotrade.broker.backtesting import Broker
+from pyalgotrade.technical.vwap import VWAP
+from pyalgotrade import plotter
+from pyalgotrade.stratanalyzer import sharpe
+from pyalgotrade.stratanalyzer import returns
+from pyalgotrade import broker as basebroker
+
 class BB_SO_RSI_strategy():
     def __init__(self, #fixed
                priceDS, #fixed
