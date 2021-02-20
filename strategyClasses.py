@@ -36,9 +36,9 @@ class BB_SO_RSI_strategy():
         self.overBoughtThreshold = overBoughtThreshold
         self.overSoldThreshold = overSoldThreshold
         
-        self.controlSignal_1 = self.so.getD()[-1]
-        self.controlSignal_2 = self.rsi[-1]
-        self.numControlSignals = [ self.controlSignal_1, self.controlSignal_2 ]
+        self.controlSignal_1 = self.so.getD()
+        self.controlSignal_2 = self.rsi
+        self.ControlSignals = [ self.controlSignal_1, self.controlSignal_2 ]
 
 
     def enterLongSignal(self):
