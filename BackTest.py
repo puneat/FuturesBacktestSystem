@@ -1,3 +1,12 @@
+from pyalgotrade.broker.backtesting import Broker
+from pyalgotrade.barfeed.csvfeed import GenericBarFeed
+from pyalgotrade.bar import Frequency
+from pyalgotrade import strategy
+from pyalgotrade import plotter
+from pyalgotrade.stratanalyzer import sharpe
+from pyalgotrade.stratanalyzer import returns
+from pyalgotrade import broker as basebroker
+
 class BacktestSystem(strategy.BacktestingStrategy):
     def __init__(self,
                  feed,
