@@ -18,13 +18,13 @@ class BB_SO_RSI_strategy():
     def __init__(self, #fixed
                priceDS, #fixed
                priceBarDS,  #fixed
-               bBandsPeriod=22, #custom
-               numStdDev=3, #custom
-               farMA=50, #custom
-               nearMA=10, #custom
-               rsiPeriod=14, #custom
-               overBoughtThreshold=80, #custom
-               overSoldThreshold=20): #custom
+               bBandsPeriod = 22, #custom
+               numStdDev = 3, #custom
+               rsiPeriod = 14, #custom
+               soPeriod = 14,
+               soDPeriod = 3,
+               overBoughtThreshold = 80, #custom
+               overSoldThreshold = 20): #custom
     # prices
         self.priceDS = priceDS
         self.priceBarDS = priceBarDS
@@ -32,9 +32,13 @@ class BB_SO_RSI_strategy():
         #indicators to use
         self.rsi = rsi.RSI(self.priceDS, rsiPeriod)
         self.bbands = BollingerBands(self.priceDS, bBandsPeriod, numStdDev)
-        self.so = StochasticOscillator(self.priceBarDS, 14, 3)
+        self.so = StochasticOscillator(self.priceBarDS, soPeriod, soDPeriod)
         self.overBoughtThreshold = overBoughtThreshold
         self.overSoldThreshold = overSoldThreshold
+        
+        self.controlSignal_1 = self.so.getD()[-1]
+        self.controlSignal_2 = self.rsi[-1]
+        self.numControlSignals = [ self.controlSignal_1, self.controlSignal_2 ]
 
 
     def enterLongSignal(self):
