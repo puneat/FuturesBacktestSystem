@@ -18,3 +18,9 @@ def process_data(path, saveName, getReturn=False):
 
     if getReturn:
         return df
+    
+# process_data('/gdrive/My Drive/Project/Soy2021/15M/1Sc1.csv', 'ZS_C1_15m')
+# process_data('/gdrive/My Drive/Project/Soy2021/15M/1Sc2.csv', 'ZS_C2_15m')
+# process_data('/gdrive/My Drive/Project/Soy2021/15M/1Sc3.csv', 'ZS_C3_15m')
+# process_data('/gdrive/My Drive/Project/Soy2021/15M/1Sc1-1Sc2.csv', 'ZS_C1C2_15m')
+# process_data('/gdrive/My Drive/Project/Soy2021/15M/1Sc2-1Sc3.csv', 'ZS_C2C3_15m')
