@@ -99,17 +99,19 @@ class BacktestSystem(strategy.BacktestingStrategy):
                 return
 
         bar = bars[self.__instrument]
+        closeDs = self.getFeed().getDataSeries(self.__instrument).getCloseDataSeries()
+        barDs = self.getFeed().getDataSeries(self.__instrument)
 
         if self.__longPos is not None:
-            if self.strategyClass.exitLongSignal(self.__longPos):
+            if self.strategyClass.exitLongSignal(self.__longPos, barDs, closeDs):
                 self.__longPos.exitMarket()
 
         elif self.__shortPos is not None:
-            if self.strategyClass.exitShortSignal(self.__shortPos):
+            if self.strategyClass.exitShortSignal(self.__shortPos, barDs, closeDs):
                 self.__shortPos.exitMarket()
 
         else:
-            if self.strategyClass.enterLongSignal():
+            if self.strategyClass.enterLongSignal(barDs, closeDs):
                 self.__longPos = self.enterLongStopLimit(self.__instrument,
                                                          bar.getClose() - (self.tickValue*self.stopLossTicks) - (self.tickValue*self.payupTicks),
                                                          bar.getClose() - (self.tickValue*self.payupTicks),
@@ -117,7 +119,7 @@ class BacktestSystem(strategy.BacktestingStrategy):
                                                          goodTillCanceled = self.GTC,
                                                          allOrNone = self.AON)
                 
-            elif self.strategyClass.enterShortSignal():
+            elif self.strategyClass.enterShortSignal(barDs, closeDs):
                 self.__shortPos = self.enterShortStopLimit(self.__instrument,
                                                            bar.getClose() + (self.tickValue*self.stopLossTicks) + (self.tickValue*self.payupTicks),
                                                            bar.getClose() + (self.tickValue*self.payupTicks),
