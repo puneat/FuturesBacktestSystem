@@ -13,6 +13,9 @@ from pyalgotrade import plotter
 from pyalgotrade.stratanalyzer import sharpe
 from pyalgotrade.stratanalyzer import returns
 from pyalgotrade import broker as basebroker
+from talib import MA_Type
+import talib
+from pyalgotrade.talibext import indicator
 
 class BB_SO_RSI_strategy():
     def __init__(self, #fixed
