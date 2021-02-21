@@ -44,24 +44,24 @@ class BB_SO_RSI_strategy():
         self.ControlSignals = [ self.controlSignal_1, self.controlSignal_2 ]
 
 
-    def enterLongSignal(self):
+    def enterLongSignal(self, extPriceBarDS = None, extPriceDS = None):
         longEntryFilter_1 = cross.cross_below(self.priceDS, self.bbands.getLowerBand()) > 0
         longEntryFilter_2 = self.rsi[-1] <= self.overSoldThreshold
         longEntryFilter_3 = self.so.getD()[-1] <= self.overSoldThreshold
         return longEntryFilter_1 and longEntryFilter_2 and longEntryFilter_3
 
-    def exitLongSignal(self, longPos):
+    def exitLongSignal(self, longPos, extPriceBarDS = None, extPriceDS = None):
         longExitFilter_1 = cross.cross_above(self.priceDS, self.bbands.getMiddleBand()) > 0
         longExitFilter_2 = longPos.exitActive()
         return longExitFilter_1 and not longExitFilter_2
 
-    def enterShortSignal(self):
+    def enterShortSignal(self, extPriceBarDS = None, extPriceDS = None):
         shortEntryFilter_1 = cross.cross_above(self.priceDS, self.bbands.getUpperBand()) > 0
         shortEntryFilter_2 = self.rsi[-1] >= self.overBoughtThreshold
         shortEntryFilter_3 = self.so.getD()[-1] >= self.overBoughtThreshold
         return shortEntryFilter_1 and shortEntryFilter_2 and shortEntryFilter_3
 
-    def exitShortSignal(self, shortPos):
+    def exitShortSignal(self, shortPos, extPriceBarDS = None, extPriceDS = None):
         shortExitFilter_1 = cross.cross_below(self.priceDS, self.bbands.getMiddleBand()) > 0
         shortExitFilter_2 = shortPos.exitActive()
         return shortExitFilter_1 and not shortExitFilter_2
