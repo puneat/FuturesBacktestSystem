@@ -94,9 +94,9 @@ class BacktestSystem(strategy.BacktestingStrategy):
         
     def onBars(self, bars):
         # Wait for enough bars to be available to calculate SMA and RSI.
-        for signal in self.strategyClass.ControlSignals:
-            if signal[-1] is None:
-                return
+#         for signal in self.strategyClass.ControlSignals:
+#             if signal[-1] is None:
+#                 return
 
         bar = bars[self.__instrument]
         closeDs = self.getFeed().getDataSeries(self.__instrument).getCloseDataSeries()
