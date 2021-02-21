@@ -13,11 +13,13 @@ from pyalgotrade import plotter
 from pyalgotrade.stratanalyzer import sharpe
 from pyalgotrade.stratanalyzer import returns
 from pyalgotrade import broker as basebroker
-from talib import MA_Type
 import talib
+from talib import MA_Type
 from pyalgotrade.talibext import indicator
 
-class BB_SO_RSI_strategy():
+
+
+class BO_RSI_SO_talib():
     def __init__(self, #fixed
                priceDS, #fixed
                priceBarDS,  #fixed
@@ -31,37 +33,83 @@ class BB_SO_RSI_strategy():
     # prices
         self.priceDS = priceDS
         self.priceBarDS = priceBarDS
+        self.numStdDev = numStdDev
+        self.bBandsPeriod = bBandsPeriod
+        self.rsiPeriod = rsiPeriod
+        self.soPeriod = soPeriod
+        self.soDPeriod = soDPeriod
+
+
 
         #indicators to use
-        self.rsi = rsi.RSI(self.priceDS, rsiPeriod)
-        self.bbands = BollingerBands(self.priceDS, bBandsPeriod, numStdDev)
-        self.so = StochasticOscillator(self.priceBarDS, soPeriod, soDPeriod)
         self.overBoughtThreshold = overBoughtThreshold
         self.overSoldThreshold = overSoldThreshold
+
+    def enterLongSignal(self, extPriceBarDS, extPriceDS):
+        upper, middle, lower = indicator.BBANDS(extPriceDS,
+                                                count = 100,
+                                                timeperiod = self.bBandsPeriod,
+                                                matype = MA_Type.SMA,
+                                                nbdevup = self.numStdDev,
+                                                nbdevdn = self.numStdDev)
+        fastk, fastd = indicator.STOCHF(extPriceBarDS,
+                                        count=100,
+                                        fastk_period = self.soPeriod,
+                                        fastd_period = self.soDPeriod,
+                                        fastd_matype = MA_Type.SMA)
         
-        self.controlSignal_1 = self.so.getD()
-        self.controlSignal_2 = self.rsi
-        self.ControlSignals = [ self.controlSignal_1, self.controlSignal_2 ]
+        rsi = indicator.RSI(extPriceDS,
+                            count = 100,
+                            timeperiod = self.rsiPeriod)
 
-
-    def enterLongSignal(self, extPriceBarDS = None, extPriceDS = None):
-        longEntryFilter_1 = cross.cross_below(self.priceDS, self.bbands.getLowerBand()) > 0
-        longEntryFilter_2 = self.rsi[-1] <= self.overSoldThreshold
-        longEntryFilter_3 = self.so.getD()[-1] <= self.overSoldThreshold
+        longEntryFilter_1 = rsi[-1] <= self.overSoldThreshold
+        longEntryFilter_2 = fastd[-1] <= self.overSoldThreshold
+        longEntryFilter_3 = cross.cross_below(extPriceDS, lower) > 0
         return longEntryFilter_1 and longEntryFilter_2 and longEntryFilter_3
 
-    def exitLongSignal(self, longPos, extPriceBarDS = None, extPriceDS = None):
-        longExitFilter_1 = cross.cross_above(self.priceDS, self.bbands.getMiddleBand()) > 0
+    def exitLongSignal(self, longPos, extPriceBarDS, extPriceDS):
+        upper, middle, lower = indicator.BBANDS(extPriceDS,
+                                                count = 100,
+                                                timeperiod = self.bBandsPeriod,
+                                                matype = MA_Type.SMA,
+                                                nbdevup = self.numStdDev,
+                                                nbdevdn = self.numStdDev)
+
+        longExitFilter_1 = cross.cross_above(extPriceDS, middle) > 0
         longExitFilter_2 = longPos.exitActive()
         return longExitFilter_1 and not longExitFilter_2
 
-    def enterShortSignal(self, extPriceBarDS = None, extPriceDS = None):
-        shortEntryFilter_1 = cross.cross_above(self.priceDS, self.bbands.getUpperBand()) > 0
-        shortEntryFilter_2 = self.rsi[-1] >= self.overBoughtThreshold
-        shortEntryFilter_3 = self.so.getD()[-1] >= self.overBoughtThreshold
+    def enterShortSignal(self,extPriceBarDS, extPriceDS):
+        upper, middle, lower = indicator.BBANDS(extPriceDS,
+                                                count = 100,
+                                                timeperiod = self.bBandsPeriod,
+                                                matype = MA_Type.SMA,
+                                                nbdevup = self.numStdDev,
+                                                nbdevdn = self.numStdDev)
+        
+        fastk, fastd = indicator.STOCHF(extPriceBarDS,
+                                        count=100,
+                                        fastk_period = self.soPeriod,
+                                        fastd_period = self.soDPeriod,
+                                        fastd_matype = MA_Type.SMA)
+        
+        rsi = indicator.RSI(extPriceDS,
+                            count = 100,
+                            timeperiod = self.rsiPeriod)
+
+        shortEntryFilter_1 = rsi[-1] >= self.overBoughtThreshold
+        shortEntryFilter_2 = fastd[-1] >= self.overBoughtThreshold
+        shortEntryFilter_3 = cross.cross_above(extPriceDS, upper) > 0
         return shortEntryFilter_1 and shortEntryFilter_2 and shortEntryFilter_3
 
-    def exitShortSignal(self, shortPos, extPriceBarDS = None, extPriceDS = None):
-        shortExitFilter_1 = cross.cross_below(self.priceDS, self.bbands.getMiddleBand()) > 0
+    def exitShortSignal(self, shortPos, extPriceBarDS, extPriceDS):
+        upper, middle, lower = indicator.BBANDS(extPriceDS,
+                                                count = 100,
+                                                timeperiod = self.bBandsPeriod,
+                                                matype = MA_Type.SMA,
+                                                nbdevup = self.numStdDev,
+                                                nbdevdn = self.numStdDev)
+
+        shortExitFilter_1 = cross.cross_below(extPriceDS, middle) > 0
         shortExitFilter_2 = shortPos.exitActive()
         return shortExitFilter_1 and not shortExitFilter_2
