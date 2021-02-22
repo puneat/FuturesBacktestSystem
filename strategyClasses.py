@@ -113,3 +113,49 @@ class BO_RSI_SO_talib():
         shortExitFilter_1 = cross.cross_below(extPriceDS, middle) > 0
         shortExitFilter_2 = shortPos.exitActive()
         return shortExitFilter_1 and not shortExitFilter_2
+
+    
+    
+class HAMMER_HANGMAN_talib():
+    def __init__(self, #fixed
+               priceDS, #fixed
+               priceBarDS,  #fixed
+               bBandsPeriod = 22, #custom
+               numStdDev = 3): #custom
+    # prices
+        self.priceDS = priceDS
+        self.priceBarDS = priceBarDS
+        self.numStdDev = numStdDev
+        self.bBandsPeriod = bBandsPeriod
+
+    def enterLongSignal(self, extPriceBarDS, extPriceDS):
+        longEntryFilter_1 = indicator.CDLHAMMER(extPriceBarDS, count=100)
+        return longEntryFilter_1[-1]==100
+
+    def exitLongSignal(self, longPos, extPriceBarDS, extPriceDS):
+        upper, middle, lower = indicator.BBANDS(extPriceDS,
+                                                count = 100,
+                                                timeperiod = self.bBandsPeriod,
+                                                matype = MA_Type.SMA,
+                                                nbdevup = self.numStdDev,
+                                                nbdevdn = self.numStdDev)
+        
+        longExitFilter_1 = cross.cross_above(extPriceDS, middle) > 0
+        longExitFilter_2 = longPos.exitActive()
+        return longExitFilter_1 and not longExitFilter_2
+
+    def enterShortSignal(self,extPriceBarDS, extPriceDS):
+        shortEntryFilter_1 = indicator.CDLHANGINGMAN(extPriceBarDS, count=100)
+        return shortEntryFilter_1[-1]==-100
+
+    def exitShortSignal(self, shortPos, extPriceBarDS, extPriceDS):
+        upper, middle, lower = indicator.BBANDS(extPriceDS,
+                                                count = 100,
+                                                timeperiod = self.bBandsPeriod,
+                                                matype = MA_Type.SMA,
+                                                nbdevup = self.numStdDev,
+                                                nbdevdn = self.numStdDev)
+        
+        shortExitFilter_1 = cross.cross_below(extPriceDS, middle) > 0
+        shortExitFilter_2 = shortPos.exitActive()
+        return shortExitFilter_1 and not shortExitFilter_2
