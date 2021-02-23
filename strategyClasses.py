@@ -159,3 +159,75 @@ class HAMMER_HANGMAN_talib():
         shortExitFilter_1 = cross.cross_below(extPriceDS, middle) > 0
         shortExitFilter_2 = shortPos.exitActive()
         return shortExitFilter_1 and not shortExitFilter_2
+
+    
+class TRIX_talib():
+    def __init__(self, #fixed
+               priceDS, #fixed
+               priceBarDS,  #fixed
+               trixFarPeriod = 14,
+               trixNearPeriod = 7): #custom
+    # prices
+        self.priceDS = priceDS
+        self.priceBarDS = priceBarDS
+        self.trixNearPeriod = trixNearPeriod
+        self.trixFarPeriod = trixFarPeriod
+
+
+
+    def enterLongSignal(self, extPriceBarDS, extPriceDS):
+        trixNear = indicator.TRIX(extPriceDS,
+                              count = 100,
+                              timeperiod = self.trixNearPeriod)
+        
+        trixFar = indicator.TRIX(extPriceDS,
+                              count = 100,
+                              timeperiod = self.trixFarPeriod)
+        
+        longEntryFilter_1 = cross.cross_above(trixNear, trixFar) > 0
+
+        return longEntryFilter_1
+
+    def exitLongSignal(self, longPos, extPriceBarDS, extPriceDS):
+        trixNear = indicator.TRIX(extPriceDS,
+                              count = 100,
+                              timeperiod = self.trixNearPeriod)
+        
+        trixFar = indicator.TRIX(extPriceDS,
+                              count = 100,
+                              timeperiod = self.trixFarPeriod)
+        
+        longExitFilter_1 = cross.cross_below(trixNear, trixNear[:-1]) > 0
+
+
+        longExitFilter_2 = longPos.exitActive()
+
+        return longExitFilter_1 and not longExitFilter_2
+
+    def enterShortSignal(self,extPriceBarDS, extPriceDS):
+        trixNear = indicator.TRIX(extPriceDS,
+                              count = 100,
+                              timeperiod = self.trixNearPeriod)
+        
+        trixFar = indicator.TRIX(extPriceDS,
+                              count = 100,
+                              timeperiod = self.trixFarPeriod)
+        
+        shortEntryFilter_1 = cross.cross_below(trixNear, trixFar) > 0
+
+        return shortEntryFilter_1
+
+    def exitShortSignal(self, shortPos, extPriceBarDS, extPriceDS):
+        trixNear = indicator.TRIX(extPriceDS,
+                              count = 100,
+                              timeperiod = self.trixNearPeriod)
+        
+        trixFar = indicator.TRIX(extPriceDS,
+                              count = 100,
+                              timeperiod = self.trixFarPeriod)
+        
+        shortExitFilter_1 = cross.cross_above(trixNear, trixNear[:-1]) > 0
+
+        shortExitFilter_2 = shortPos.exitActive()
+
+        return shortExitFilter_1 and not shortExitFilter_2
