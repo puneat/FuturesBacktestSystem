@@ -8,4 +8,4 @@ Allows for easy strategy creation and testing by separating the strategy segment
 * Save key metrics and KPIs
 * Save buy-sell signal plots
 * Save cumulative plots (equity curves)
-* read backtest results and evaluate seasonality across different contracts
+* Read backtest results and evaluate seasonality across different contracts
