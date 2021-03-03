@@ -19,7 +19,8 @@ class BacktestSystem(strategy.BacktestingStrategy):
                  GTC = False,
                  AON = False,
                  lotSize = 1,
-                 printOrders = True
+                 printOrders = False,
+                 saveTradeLog = False
                  ):
         super(BacktestSystem, self).__init__(feed, startingMoney)
 
@@ -34,6 +35,8 @@ class BacktestSystem(strategy.BacktestingStrategy):
         self.startingMoney = startingMoney
         self.strategyClass = strategyClass
         self.printOrders = printOrders
+        self.saveTradeLog = saveTradeLog
+        self.trade_log =[]
 
         #position params
         self.__longPos = None
@@ -60,19 +63,19 @@ class BacktestSystem(strategy.BacktestingStrategy):
         position.exitMarket()
 
     def onOrderUpdated(self, order):
-        if self.printOrders:
-            action = order.getAction()
-            price = order.getAvgFillPrice()
-            qty = order.getFilled()
+        action = order.getAction()
+        price = order.getAvgFillPrice()
+        qty = order.getFilled()
 
-            if action==1:
-                orderType = 'Long Position Entry'
-            elif action==2:
-                orderType = 'Short Position Exit'
-            elif action==3:
-                orderType = 'Long Position Exit'
-            elif action==4:
-                orderType = 'Short Position Entry'
+        if action==1:
+            orderType = 'Long Position Entry'
+        elif action==2:
+            orderType = 'Short Position Exit'
+        elif action==3:
+            orderType = 'Long Position Exit'
+        elif action==4:
+            orderType = 'Short Position Entry'
+        if self.printOrders:
 
             execInfo = order.getExecutionInfo()
             if price is None:
@@ -89,8 +92,11 @@ class BacktestSystem(strategy.BacktestingStrategy):
                           qty,
                           price
                           ))
+        if self.saveTradeLog:
+            self.trade_log.append([order.getSubmitDateTime(), orderType,basebroker.Order.State.toString(order.getState()), qty, price] )
         else:
           pass
+
         
     def onBars(self, bars):
         # Wait for enough bars to be available to calculate SMA and RSI.
