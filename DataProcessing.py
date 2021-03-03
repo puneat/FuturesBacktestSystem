@@ -121,7 +121,7 @@ def savePlots(cum_ret, save_path, per, contract_name):
     ax.plot(target)
     ax.set_xlabel('Time (daily)')
     ax.set_ylabel('Cumulative Ticks')
-    ax.set_title(onlyfiles[i].split('.')[0])
+    ax.set_title(contract_name.split('.')[0])
     plt.savefig(save_path + per + '/' + contract_name.split('.')[0] + '.png', bbox_inches='tight')
     plt.close(fig='all')
     
