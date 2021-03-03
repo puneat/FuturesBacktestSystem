@@ -125,7 +125,7 @@ def savePlots(cum_ret, save_path, per):
     plt.savefig(save_path + per + '/' + onlyfiles[i].split('.')[0] + '.png', bbox_inches='tight')
     plt.close(fig='all')
     
-def saveLogs(trade_signals, save_path, returnSignals=False):
+def saveLogs(trade_signals, save_path, input_path, returnSignals=False):
     timestamp=[]
     price_list=[]
     type_list=[]
