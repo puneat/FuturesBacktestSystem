@@ -104,7 +104,7 @@ def cumulativeReturnsPlot(cum_ret):
   plt.title('Daily Cumulative Returns')
   plt.show()
 
-def savePlots(cum_ret, save_path, per):
+def savePlots(cum_ret, save_path, per, contract_name):
     price=[]
     for j in range(0, cum_ret.__len__()):
       price.append(cum_ret.__getitem__(j))
@@ -122,10 +122,10 @@ def savePlots(cum_ret, save_path, per):
     ax.set_xlabel('Time (daily)')
     ax.set_ylabel('Cumulative Ticks')
     ax.set_title(onlyfiles[i].split('.')[0])
-    plt.savefig(save_path + per + '/' + onlyfiles[i].split('.')[0] + '.png', bbox_inches='tight')
+    plt.savefig(save_path + per + '/' + contract_name.split('.')[0] + '.png', bbox_inches='tight')
     plt.close(fig='all')
     
-def saveLogs(trade_signals, save_path, input_path, returnSignals=False):
+def saveLogs(trade_signals, save_path, input_path, contract_name, returnSignals=False):
     timestamp=[]
     price_list=[]
     type_list=[]
@@ -152,7 +152,7 @@ def saveLogs(trade_signals, save_path, input_path, returnSignals=False):
     newdf = in_csv.loc[in_csv.index.intersection(mydict.index.values),:]
     newdf['Signal'] = mydict['Order Type']
     newdf['Executed Price'] = mydict['Price']
-    newdf.to_csv(save_path + onlyfiles[i].split('.')[0] + '.csv')
+    newdf.to_csv(save_path + contract_name.split('.')[0] + '.csv')
     if returnSignals:
         return newdf
         del newdf, in_csv, mydict
