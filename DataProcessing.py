@@ -149,7 +149,7 @@ def saveLogs(trade_signals, save_path, input_path, contract_name, returnSignals=
     in_csv = pd.read_csv(input_path)
     in_csv['Date Time'] = pd.to_datetime(in_csv['Date Time'], format="%Y-%m-%d %H:%M:%S")
     in_csv.set_index(keys='Date Time',inplace=True)
-    newdf = in_csv.loc[in_csv.index.intersection(mydict.index.values),:]
+    newdf = in_csv.loc[in_csv.index.union(mydict.index.values),:]
     newdf['Signal'] = mydict['Order Type']
     newdf['Executed Price'] = mydict['Price']
     newdf.to_csv(save_path + contract_name.split('.')[0] + '.csv')
