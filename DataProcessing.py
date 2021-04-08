@@ -3,6 +3,7 @@ import numpy as np
 from pandas import datetime
 import matplotlib.pyplot as plt
 from datetime import datetime
+import plotly.express as px
 
 def process_data(path, saveName, getReturn=False):
     # path = self.interval + '/' + self.product + name + '.csv'
@@ -98,11 +99,14 @@ def cumulativeReturnsPlot(cum_ret):
 
   # fig = plt.figure(figsize=[15,6])
   # ax = fig.add_axes([0,0,1,1])
-  plt.plot(target)
-  plt.xlabel('Time (daily)')
-  plt.ylabel('Cumulative Ticks')
-  plt.title('Daily Cumulative Returns')
-  plt.show()
+
+  fig = px.line(target, x='Time (daily)', y='Cumulative Ticks', title='Daily Cumulative Returns')
+  fig.show()
+#   plt.plot(target)
+#   plt.xlabel('Time (daily)')
+#   plt.ylabel('Cumulative Ticks')
+#   plt.title('Daily Cumulative Returns')
+#   plt.show()
 
 def savePlots(cum_ret, save_path, per, contract_name):
     price=[]
